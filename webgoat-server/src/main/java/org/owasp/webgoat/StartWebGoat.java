@@ -51,6 +51,7 @@ public class StartWebGoat extends SpringBootServletInitializer {
         log.info("Starting WebGoat with args: {}", StringUtils.arrayToCommaDelimitedString(args));
         System.setProperty("spring.config.name", "application-webgoat");
 
+        String TempPassword = "abcd1234";
         String webgoatPort = System.getenv("WEBGOAT_PORT");
         String databasePort = System.getenv("WEBGOAT_HSQLPORT");
         String webGoatHost = null == System.getenv("WEBGOAT_HOST") ? "127.0.0.1" : System.getenv("WEBGOAT_HOST");
