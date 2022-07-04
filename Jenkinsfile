@@ -12,12 +12,11 @@ pipeline {
     }
 
     stages {
-        stage('Checkout SCM'){
-            checkout scm
-        }
-
+        
         stage('SonarQube Analysis'){
-            sh "./mvnw clean verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.login=$SONAR_TOKEN"
+            steps {
+                sh "./mvnw clean verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.login=$SONAR_TOKEN"
+            }
         }
     }
 
