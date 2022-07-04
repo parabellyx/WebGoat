@@ -19,6 +19,19 @@ pipeline {
             }
         }
 
+        stage('dependency check'){
+            steps{
+                withMaven(maven: 'maven 3.8.6'){
+                    sh 'mvn dependency-check:check'
+                }
+            }
+            post {
+                always {
+                    dependencyCheckPublisher pattern: 'target/bom.xml'
+                }
+            }
+        }
+
         stage('dependency tracker'){
             steps{
                 withCredentials([string(credentialsId: 'dt api-key', variable: 'API_KEY')]){
