@@ -1,11 +1,24 @@
-node {
-  stage('SCM') {
-    checkout scm
-  }
-  stage('SonarQube Analysis') {
-    def mvn = tool 'maven 3.8.6';
-    withSonarQubeEnv() {
-      sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=webgoat"
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven 3.8.6'
     }
-  }
+
+    environment {
+        SONAR_URL       = credentials('SONAR_URL')
+        SONAR_PROJECT   = credentials('SONAR_PROJECT')
+        SONAR_TOKEN     = credentials('SONAR_TOKEN')
+    }
+
+    stages {
+        stage('Checkout SCM'){
+            checkout scm
+        }
+
+        stage('SonarQube Analysis'){
+            sh "./mvnw clean verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.login=$SONAR_TOKEN"
+        }
+    }
+
 }
