@@ -18,6 +18,14 @@ pipeline {
                 sh './mvnw clean verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.login=$SONAR_TOKEN'
             }
         }
+
+        stage('dependency tracker'){
+            steps{
+                withCredentials([string(credentialsId: 'dt api-key', variable: 'API_KEY')]){
+                    dependencyTrackPublisher artifact: 'target/bom.xml', projectName: 'WebGoat', projectVersion: '8', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [tags: ['UAT', 'Java'], swidTagId: 'my swid tag', group: 'Vuln1']
+                }
+            }
+        }
     }
 
 }
