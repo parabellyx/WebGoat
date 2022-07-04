@@ -21,9 +21,7 @@ pipeline {
 
         stage('dependency check'){
             steps{
-                withMaven(maven: 'maven 3.8.6'){
-                    sh 'mvn dependency-check:check'
-                }
+                    sh 'mvn org.owasp:dependency-check-maven:check'
             }
             post {
                 always {
