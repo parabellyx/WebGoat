@@ -15,7 +15,7 @@ pipeline {
         
         stage('SonarQube Analysis'){
             steps {
-                sh "./mvnw clean verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.login=$SONAR_TOKEN"
+                sh './mvnw clean verify sonar:sonar -Dsonar.host.url=$SONAR_URL -Dsonar.projectKey=$SONAR_PROJECT -Dsonar.login=$SONAR_TOKEN'
             }
         }
     }
