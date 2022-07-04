@@ -27,15 +27,21 @@ pipeline {
             }
             post {
                 always {
-                    dependencyCheckPublisher pattern: 'target/bom.xml'
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'target/dependency-check-report.html', fingerprint: true, onlyIfSuccessful: true
                 }
             }
         }
 
         stage('dependency tracker'){
-            steps{
-                withCredentials([string(credentialsId: 'dt api-key', variable: 'API_KEY')]){
-                    dependencyTrackPublisher artifact: 'target/bom.xml', projectName: 'WebGoat', projectVersion: '8', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [tags: ['UAT', 'Java'], swidTagId: 'my swid tag', group: 'Vuln1']
+            steps {
+                sh 'mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom'
+            }
+            post {
+                success{
+                    withCredentials([string(credentialsId: 'dt api-key', variable: 'API_KEY')]){
+                        dependencyTrackPublisher artifact: 'target/bom.xml', projectName: 'WebGoat', projectVersion: '8', synchronous: true, dependencyTrackApiKey: API_KEY, projectProperties: [tags: ['UAT', 'Java'], swidTagId: 'my swid tag', group: 'Vuln1']
+                    }
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'target/bom.xml', fingerprint: true, onlyIfSuccessful: true   
                 }
             }
         }
