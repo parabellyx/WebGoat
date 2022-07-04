@@ -21,7 +21,9 @@ pipeline {
 
         stage('dependency check'){
             steps{
-                    sh 'mvn org.owasp:dependency-check-maven:check'
+                    catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE'){
+                        sh 'mvn org.owasp:dependency-check-maven:check'
+                    }
             }
             post {
                 always {
