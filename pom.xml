@@ -115,8 +115,8 @@
         <!-- Use UTF-8 Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
 
         <!-- Shared properties with plugins and version numbers across submodules-->
         <asciidoctorj.version>2.5.2</asciidoctorj.version>
@@ -131,7 +131,7 @@
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <java.version>17</java.version>
+        <java.version>11</java.version>
         <thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
         <pmd.version>3.15.0</pmd.version>
         <checkstyle.version>3.1.2</checkstyle.version>
@@ -140,9 +140,9 @@
     <modules>
         <module>webgoat-container</module> 
         <module>webgoat-lessons</module>
-        <module>webgoat-server</module>
+        <!-- <module>webgoat-server</module> -->
         <module>webwolf</module>
-        <module>webgoat-integration-tests</module>
+        <!-- <module>webgoat-integration-tests</module> -->
         <!-- <module>docker</module>copy required jars in preparation of docker all-in-one build -->
     </modules>
 
@@ -192,8 +192,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>15</source>
-                    <target>15</target>
+                    <source>11</source>
+                    <target>11</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
