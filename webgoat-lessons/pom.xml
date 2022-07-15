@@ -33,7 +33,7 @@
         <module>webgoat-introduction</module>
         <module>webwolf-introduction</module>
         <module>auth-bypass</module>
-        <!-- <module>missing-function-ac</module> -->
+        <module>missing-function-ac</module>
         <module>csrf</module>
         <module>password-reset</module>
         <module>ssrf</module>
