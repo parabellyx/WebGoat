@@ -27,7 +27,7 @@
         <module>insecure-deserialization</module>
         <module>jwt</module>
         <module>sql-injection</module>
-        <!-- <module>xxe</module> -->
+        <module>xxe</module>
         <module>idor</module>
         <module>vulnerable-components</module>
         <module>webgoat-introduction</module>
