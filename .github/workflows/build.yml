@@ -34,3 +34,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=webgoat
+      - name: Generate SBOM
+        if: always()
+        shell: bash
+        run: |
+          mvn -Dmaven.test.skip org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: SBOM Artifact
+          path: bom.xml
