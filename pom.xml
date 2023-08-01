@@ -131,18 +131,18 @@
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <java.version>8</java.version>
+        <java.version>17</java.version>
         <thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
         <pmd.version>3.15.0</pmd.version>
         <checkstyle.version>3.1.2</checkstyle.version>
     </properties>
 
     <modules>
-        <!-- <module>webgoat-container</module>  -->
-        <!-- <module>webgoat-lessons</module> -->
-        <!-- <module>webgoat-server</module> -->
-        <!-- <module>webwolf</module> -->
-        <!-- <module>webgoat-integration-tests</module> -->
+        <module>webgoat-container</module>  -->
+        <module>webgoat-lessons</module>
+        <module>webgoat-server</module>
+        <module>webwolf</module>
+        <module>webgoat-integration-tests</module>
         <!-- <module>docker</module>copy required jars in preparation of docker all-in-one build -->
     </modules>
 
@@ -192,8 +192,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>17</source>
+                    <target>17</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
