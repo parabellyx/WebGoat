@@ -41,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          JAVA_HOME: /opt/hostedtoolcache/Java_Adopt_jdk/11/x64
+          JAVA_HOME: /opt/hostedtoolcache/Java_Adopt_jdk/11.0.20-8/x64
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=webgoat -Dsonar.login=${{ secrets.SONAR_TOKEN }} -DskipTests
       - name: Generate SBOM
         if: always()
