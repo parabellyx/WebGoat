@@ -34,7 +34,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Java 17
         env:
-          JAVA_HOME: JAVA_HOME_{{ 17 }}_{{ ARCHITECTURE }}
+          JAVA_HOME: JAVA_HOME_17_x64
         run: ./mvnw clean install
       - name: Build and analyze
         env:
