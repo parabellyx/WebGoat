@@ -1,51 +1,38 @@
-name: Build
+# Name of this GitHub Actions workflow.
+name: AppScanSast
+
 on:
+  # Scan changed files in PRs (diff-aware scanning):
+  pull_request: {}
+  # Scan on-demand through GitHub Actions interface:
+  workflow_dispatch: {}
+  # Scan mainline branches and report all findings: 
   push:
-    branches:
-      - develop # or the name of your main branch
+    branches: ["master", "main", "develop"]
+  # Schedule the CI job (this method uses cron syntax):
+  schedule:
+    - cron: '0 0 * * *' # Sets Semgrep to scan every day at midnight UTC.
+    # It is recommended to change the schedule to a random time.
 
 jobs:
-  build:
-    name: Build
+  semgrep:
+    # User-definable name of this GitHub Actions job:
+    name: semgrep/ci
+    # If you are self-hosting, change the following `runs-on` value: 
     runs-on: ubuntu-latest
+
+    container:
+      # A Docker image with Semgrep installed. Do not change this.
+      image: returntocorp/semgrep
+
+    # Skip any PR created by dependabot to avoid permission issues:
+    if: (github.actor != 'dependabot[bot]')
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Set up JDK 17
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-      - name: Cache SonarQube packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Build and analyze
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{ secrets.APPSEC_PRODUCT_NAME }} -Dsonar.login=${{ secrets.SONAR_TOKEN }} -DskipTests
-      - name: Generate SBOM
-        if: always()
-        shell: bash
+      # Fetch project source with GitHub Actions Checkout.
+      - uses: actions/checkout@v3
+      # Run the "semgrep ci" command on the command line of the docker image.
+      - run: semgrep ci --json --config="p/default" --config "p/java" > semgrep.json || true 
+      - shell: bash
         run: |
-          mvn -Dmaven.test.skip org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: SBOM Artifact
-          path: target/bom.xml
-      - name: Import SonarQube scans to dashboard
-        shell: bash
-        run: |
-          sleep 60 
-          curl -X POST ${{ secrets.APPSEC_DASHBOARD_URL }}/api/v2/import-scan/ -H  "accept: application/json" -H  "Content-Type: multipart/form-data"  -H "Authorization: Token ${{ secrets.DASHBOARD_TOKEN }}" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=SonarQube API Import" -F "close_old_findings=false" -F "push_to_jira=false" -F "product_name=${{ secrets.APPSEC_PRODUCT_NAME }}" -F "auto_create_context=true" -F "scan_date=$(date +%Y-%m-%d)" -F "engagement_name=$(date +%Y-%m)"
+          curl -X POST "https://${{ secrets.APPSEC_DASHBOARD_URL }}/api/v2/import-scan/" -H  "accept: application/json" -H  "Content-Type: multipart/form-data"  -H "Authorization: Token ${{ secrets.DASHBOARD_TOKEN }}" -F "minimum_severity=Info" -F "active=true" -F "verified=true" -F "scan_type=Semgrep JSON Report" -F "close_old_findings=false" -F "push_to_jira=false" -F "product_name=${{ secrets.APPSEC_PRODUCT_NAME }}" -F "scan_date=$(date +%Y-%m-%d)" -F "engagement_name=$(date +%Y-%m)" -F "auto_create_context=true" -F "file=@semgrep.json"
